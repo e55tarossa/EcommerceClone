@@ -1,0 +1,5 @@
+Antd
+redux/toolkit
+React router dom v6
+styled components
+react slick

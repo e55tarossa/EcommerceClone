@@ -1,0 +1,4 @@
+express dotenv bcrypt jsonwebtoken body-parser cros
+moogooes
+
+JWT CRUD Product Middleware MVC Pagination
