@@ -119,6 +119,7 @@ const deleteProduct = (id) => {
 }
 
 const deleteManyProduct = (ids) => {
+  // console.log(ids);
     return new Promise(async (resolve, reject) => {
         try {
             // const checkProduct = await Product.findOne({

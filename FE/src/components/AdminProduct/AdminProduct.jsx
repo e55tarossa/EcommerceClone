@@ -76,6 +76,16 @@ const AdminProduct = () => {
         },
     )
 
+    const mutationDeleteMany = useMutationHooks(
+        (data) => {
+            const {  token, ...ids } = data // cho id thanh ojbj
+            console.log(data)
+            const res = ProductService.deleteManyProduct(ids, token)
+            return res
+        },
+    )
+
+
     // Get Products ----------------
     const getAllProducts = async () => {
         const res = await ProductService.getAllProduct()
@@ -97,11 +107,11 @@ const AdminProduct = () => {
     }, [form, stateProductDetails])
 
     useEffect(() => {
-        if (rowSelected) {
+        if (rowSelected && isOpenDrawer ) {
             setIsLoadingUpdate(true)
             getDetailsProduct(rowSelected)
         }
-    }, [rowSelected])
+    }, [rowSelected, isOpenDrawer])
 
     //Bấm vào nút update => 55 getdetails => trả về data =>  75 useeffect gọi lại render => 71 set vào form
     const handleUpdateProduct = () => {
@@ -294,6 +304,7 @@ const AdminProduct = () => {
     const { data, isLoading, isSuccess, isError } = mutation
     const { data: dataUpdate, isLoading: isLoadingUpdated, isSuccess: isSuccessUpdated, isError: isErrorUpdated } = mutationUpdate
     const { data: dataDeleted, isLoading: isLoadingDeleted, isSuccess: isSuccessDeleted, isError: isErrorDeleted } = mutationDelete
+    const { data: dataDeletedMany, isLoading: isLoadingDeletedMany, isSuccess: isSuccessDeletedMany, isError: isErrorDeletedMany } = mutationDeleteMany
     // console.log(mutation);
 
     const handleCancel = () => {
@@ -321,6 +332,17 @@ const AdminProduct = () => {
                 queryProduct.refetch()
             }
         })
+    }
+
+    //truyen ham xuong table
+    const handleDeleteManyProduct = (ids) => {
+        mutationDeleteMany.mutate({ ids: ids, token: user?.access_token}, {
+            // dung de refresh table 41 : 7p
+            onSettled: () => {
+                queryProduct.refetch()
+            }
+        })
+        console.log("_id" ,{ids});
     }
 
 
@@ -356,6 +378,14 @@ const AdminProduct = () => {
             message.error("Product is not exists")
         }
     }, [isSuccessDeleted])
+
+    useEffect(() => {
+        if (isSuccessDeletedMany && dataDeletedMany?.status === 'OK') {
+            message.success("Delete products success")
+        } else if (dataDeletedMany?.status === 'ERR') {
+            message.error("Products is not exists")
+        }
+    }, [isSuccessDeletedMany])
 
     useEffect(() => {
         if (isSuccessUpdated && dataUpdate?.status === 'OK') {
@@ -426,7 +456,7 @@ const AdminProduct = () => {
                 <Button onClick={() => setIsModalOpen(!isModalOpen)} style={{ height: "150px", width: "150px", borderRadius: "6px", borderStyle: "dashed" }}><PlusOutlined style={{ fontSize: "60px" }} /></Button>
             </div>
             <div style={{ marginTop: "20px" }}>
-                <TableComponent columns={columns} data={dataTable} products={products?.data} isLoading={isLoadingProducts} onRow={(record, rowIndex) => {
+                <TableComponent columns={columns}  handleDeleteMany={handleDeleteManyProduct} data={dataTable} products={products?.data} isLoading={isLoadingProducts} onRow={(record, rowIndex) => {
                     return {
                         onClick: (event) => {
                             // console.log(record)

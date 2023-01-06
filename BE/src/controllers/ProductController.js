@@ -57,9 +57,10 @@ const getDetailsProduct = async (req, res) => {
   }
 };
 
-const deleteProduct = async (req, res) => {
+const deleteManyProduct = async (req, res) => {
   try {
-    const ids = req.body // Mot mang 
+    const ids = req.body.ids // Mot mang  //{ [ '638f01e781250f772726aa91', '638ed29e421defb99394017e' ] }
+    // console.log(req.body); //{ ids: [ '638f01e781250f772726aa91', '638ed29e421defb99394017e' ] }
     if (!ids) {
       return res.status(200).json({
         status: "ERR",
@@ -75,7 +76,7 @@ const deleteProduct = async (req, res) => {
   }
 };
  
-const deleteManyProduct = async (req, res) => {
+const deleteProduct = async (req, res) => {
   try {
     const productId = req.params.id;
     if (!productId) {

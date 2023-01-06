@@ -7,7 +7,7 @@ router.post("/create", ProductController.createProduct)
 router.put("/update/:id",authMiddleWare, ProductController.updateProduct)
 router.get("/details/:id", ProductController.getDetailsProduct)
 router.delete('/delete/:id',authMiddleWare, ProductController.deleteProduct)
-router.delete('/delete-many',authMiddleWare, ProductController.deleteManyProduct)
+router.post('/delete-many',authMiddleWare, ProductController.deleteManyProduct)
 router.get('/get-all', ProductController.getAllProduct)
 
 
