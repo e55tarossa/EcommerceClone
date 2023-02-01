@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import * as UserService from '../../services/UserService'
 import { resetUser } from '../../redux/slices/userSlice'
 import Loading from '../LoadingComponent/Loading';
+import { searchProduct } from '../../redux/slices/productSlice';
 
 
 const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
@@ -17,6 +18,7 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
   const [loading, setLoading] = useState(false)
   const [userAvatar, setUserAvatar] = useState('')
   const [userName, setUserName] = useState("")
+  const [search, setSearch] = useState("")
   const handleLogout = async () => {
     setLoading(true)
     await UserService.logoutUser()
@@ -32,16 +34,21 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
   }, [user?.name])
 
 
-
   const Content = (
     <div>
-      <WrapperContentPopup onClick={() => navigate("/profile-user")}>User Infomation</WrapperContentPopup>
+      <WrapperContentPopup onClick={() => navigate("/profile-user")}>User Information</WrapperContentPopup>
       {user?.isAdmin && (
         <WrapperContentPopup onClick={() => navigate("/system/admin")}>System Management</WrapperContentPopup>
       )}
       <WrapperContentPopup onClick={handleLogout}>Logout</WrapperContentPopup>
     </div>
   )
+
+  const onSearch = (e) => {
+    setSearch(e.target.value)
+    dispatch(searchProduct(e.target.value))
+    // console.log(e.target.value) value khi search
+  }
   return (
     <div>
       <WrapperHeader gutter={16} style={{justifyContent: isHiddenSearch ? 'space-between' : 'unset'}}>
@@ -54,6 +61,7 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
           <ButtonInputSearch
             textButton="Search"
             placeholder="Search your product ..."
+            onChange={onSearch}
           />
         </Col>)}
 
@@ -72,7 +80,7 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
               )}
               {user?.access_token ? (
                 <>
-                  <Popover content={Content} title="Title" trigger="click">
+                  <Popover content={Content} title="User settings" trigger="click">
                     <div style={{ cursor: "pointer" }}>{userName?.length ? userName : user?.email}</div>
                   </Popover>
                 </>

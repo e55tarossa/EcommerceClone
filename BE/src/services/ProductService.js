@@ -192,6 +192,22 @@ const getAllProduct = (limit, page, sort, filter) => {
     })
 }
 
+const getAllTypeProduct = (limit, page, sort, filter) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const allTypeProduct = await Product.distinct('type')
+            //  const allProduct = await Product.find()
+            resolve({
+                status: 'OK',
+                message: 'Success',
+                data: allTypeProduct,
+            })
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
 
 
 
@@ -201,5 +217,6 @@ module.exports = {
   getDetailsProduct,
   deleteProduct,
   getAllProduct,
-  deleteManyProduct
+  deleteManyProduct,
+  getAllTypeProduct
 };

@@ -3,3 +3,8 @@ redux/toolkit
 React router dom v6
 styled components
 react slick
+
+export excel 
+search filter by name by type 
+add type for prodcut
+load more feature
