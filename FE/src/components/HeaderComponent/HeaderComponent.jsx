@@ -13,6 +13,8 @@ import { searchProduct } from '../../redux/slices/productSlice';
 
 const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
   const user = useSelector(state => state.user)
+  const order = useSelector(state => state.order)
+  // console.log(order)
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const [loading, setLoading] = useState(false)
@@ -97,8 +99,8 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
 
             </WrapperAccountHeader>
           </Loading>
-          {!isHiddenCart && (<WrapperCartHeader>
-            <Badge count={4} size="small">
+          {!isHiddenCart && (<WrapperCartHeader onClick={() => navigate("/order")} style={{cursor: "pointer"}}>
+            <Badge count={order?.orderItems?.length} size="small">
               <ShoppingCartOutlined style={{ fontSize: '30px', color: "#fff" }} />
             </Badge>
             <span>Cart</span>

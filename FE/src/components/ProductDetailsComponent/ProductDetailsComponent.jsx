@@ -6,11 +6,16 @@ import * as ProductService from '../../services/ProductService'
 import ButtonComponent from '../ButtonComponent/ButtonComponent'
 import { useQuery } from '@tanstack/react-query'
 import Loading from '../LoadingComponent/Loading'
-import {useSelector} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { addOrderProduct } from '../../redux/slices/orderSlice'
 
 const ProductDetailsComponent = ({ idProduct }) => {
     const [numProduct, setNumProduct] = useState(1)
     const user = useSelector((state) => state.user)
+    const navigate = useNavigate()
+    const location = useLocation()
+    const dispatch = useDispatch()
     const onChange = (value) => { 
         setNumProduct(Number(value))
         // console.log(numProduct)
@@ -27,7 +32,25 @@ const ProductDetailsComponent = ({ idProduct }) => {
         if(type === 'increase'){
             setNumProduct(numProduct + 1) // 
         } else {
-            setNumProduct(numProduct - 1)
+            if(numProduct >= 2) {
+                setNumProduct(numProduct - 1)
+            }
+        }
+    }
+
+    const handleAddOrderProduct = () => {
+        if(!user?.id) {
+            navigate('/sign-in', {state: location?.pathname}) // truyền state zo location chung => qua login sài
+        } else {
+            dispatch(addOrderProduct({
+                orderItem: {
+                    name : productDetails?.name,
+                    amount :numProduct,
+                    image : productDetails?.image,
+                    price : productDetails?.price,
+                    product: productDetails?._id
+                } 
+            }))
         }
     }
 
@@ -40,12 +63,12 @@ const ProductDetailsComponent = ({ idProduct }) => {
     // }
     //Khi sài query thì cái truyền vào hàm getdetailsproduct sẽ là 1 context
     const { isLoading, data: productDetails } = useQuery(['product-details', idProduct], getDetailsProduct, { enabled: !!idProduct }) //enable di co id
-    // console.log(productDetails);
+    console.log(productDetails);
     return (
         <Loading isLoading={isLoading}>
             <Row style={{ padding: '16px', background: '#fff', borderRadius: '4px' }}>
                 <Col span={10} style={{ borderRight: '1px solid #e5e5e5', paddingRight: '8px' }}>
-                    <Image src={productDetails?.image}  />
+                    <Image width={360} src={productDetails?.image}  />
                     <Row style={{ paddingTop: '10px', justifyContent: 'space-between' }}>
                         <WrapperStyleColImage span={4}>
                             <WrapperStyleImageSmall src="https://picsum.photos/80/80" />
@@ -87,7 +110,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
                             <button style={{ border: 'none', background: 'transparent', cursor:"pointer" }}>
                                 <MinusOutlined style={{ color: '#000', fontSize: '20px' }} onClick={() => handleChangeCount("decrease")}/>
                             </button>
-                            <WrapperInputNumber defaultValue={1} value={numProduct} onChange={onChange} size="small" />
+                            <WrapperInputNumber min={1} defaultValue={1} value={numProduct} onChange={onChange} size="small" />
                             <button style={{ border: 'none', background: 'transparent', cursor:"pointer" }}>
                                 <PlusOutlined style={{ color: '#000', fontSize: '20px' }} onClick={() => handleChangeCount("increase")}/>
                             </button>
@@ -103,7 +126,8 @@ const ProductDetailsComponent = ({ idProduct }) => {
                                 border: 'none',
                                 borderRadius: '4px'
                             }}
-                            textButton={'Chọn mua'}
+                            onClick={handleAddOrderProduct}
+                            textButton={'Buy'}
                             styleTextButton={{ color: '#fff', fontSize: '15px', fontWeight: '700' }}
                         ></ButtonComponent>
                         <ButtonComponent
@@ -115,7 +139,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
                                 border: '1px solid rgb(13, 92, 182)',
                                 borderRadius: '4px'
                             }}
-                            textButton={'Mua trả sau'}
+                            textButton={'Postpaid'}
                             styleTextButton={{ color: 'rgb(13, 92, 182)', fontSize: '15px' }}
                         ></ButtonComponent>
                     </div>

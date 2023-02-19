@@ -6,7 +6,7 @@ import imageLogo from '../../assets/images/signupimg.png'
 import { Image } from 'antd'
 import { EyeFilled, EyeInvisibleFilled } from '@ant-design/icons'
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import * as UserService from '../../services/UserService'
 import { useMutationHooks } from '../../hooks/useMutationHook'
 import Loading from '../../components/LoadingComponent/Loading'
@@ -19,6 +19,7 @@ const SignInPage = () => {
   const [isShowPassword, setIsShowPassword] = useState(false)
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const location = useLocation()
   const navigate = useNavigate()
   const dispatch = useDispatch()
 
@@ -26,14 +27,18 @@ const SignInPage = () => {
     data => UserService.loginUser(data)
   )
   const { data, isLoading, isSuccess, isError } = mutation
-  console.log(mutation) //mutaion log
+  // console.log(mutation) //mutaion log
 
   useEffect(() => {
     if (isSuccess) {
+      if(location?.state) {
+        navigate(location?.state)
+      } else {
+        navigate("/")
+      }
       localStorage.setItem('access_token', JSON.stringify(data?.access_token)) // login => luu token local => 
       if (data.access_token) {
         message.success()
-        navigate("/")
         const decoded = jwt_decode(data?.access_token) // exp, payload: {id: '638dae7dd1dde71a98acbc8d', isAdmin: true}
         // console.log(decoded)
         if (decoded?.id) {
