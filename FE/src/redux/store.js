@@ -18,12 +18,14 @@ const persistConfig = {
   key: 'root',
   version: 1,
   storage,
+  blacklist:['product','user'] // khong luu vao store
 }
 
 const rootReducer = combineReducers({
   product: productReducer,
   user: userReducer,
-  order: orderReducer})
+  order: orderReducer
+})
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 

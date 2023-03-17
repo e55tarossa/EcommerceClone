@@ -14,6 +14,11 @@ import { PersistGate } from "redux-persist/integration/react";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 const queryClient = new QueryClient()
+// persistor.purge().then(() => {
+//   console.log('Persisted value removed successfully!');
+// }).catch((error) => {
+//   console.error('Error removing persisted value:', error);
+// });
 root.render(
   <QueryClientProvider client={queryClient}>
     <Provider store={store}>

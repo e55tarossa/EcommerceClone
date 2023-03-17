@@ -147,6 +147,7 @@ const getAllProduct = (limit, page, sort, filter) => {
     return new Promise(async (resolve, reject) => {
         try {
             const totalProduct = await Product.count()
+            let allProduct = []
             // console.log(filter);
             if (filter) {
                 const label = filter[0]; // label = key => [label] thanh key
@@ -176,7 +177,11 @@ const getAllProduct = (limit, page, sort, filter) => {
                     totalPage: Math.ceil(totalProduct / limit)
                 })
             }
-            const allProduct = await Product.find().limit(limit).skip(page * limit) //skip lay tu phan tu so may (page * limit 5:30 #24)
+            if(!limit){
+              allProduct = await Product.find() // Neu khong co limit thi tim all 
+            } else {
+              allProduct = await Product.find().limit(limit).skip(page * limit) //skip lay tu phan tu so may (page * limit 5:30 #24)
+            }
             //  const allProduct = await Product.find()
             resolve({
                 status: 'OK',

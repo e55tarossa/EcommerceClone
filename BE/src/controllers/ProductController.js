@@ -3,9 +3,7 @@ const ProductService = require("../services/ProductService");
 const createProduct = async (req, res) => {
   try {
     // console.log(req.body); //input nhap vao
-    const { name, image, type, price, countInStock, rating,selled, discount, description } =
-      req.body;
-
+    const { name, image, type, price, countInStock, rating,selled, discount, description } = req.body;
     if (!name || !image || !type || !price || !countInStock || !rating) {
       return res.status(400).json({
         status: "ERR",
@@ -97,7 +95,7 @@ const deleteProduct = async (req, res) => {
 const getAllProduct = async (req, res) => {
     try {
         const { limit, page, sort, filter } = req.query
-        const response = await ProductService.getAllProduct(Number(limit) || 100, Number(page) || 0, sort, filter)
+        const response = await ProductService.getAllProduct(Number(limit) || null, Number(page) || 0, sort, filter)
         // const response = await ProductService.getAllProduct()
         return res.status(200).json(response)
     } catch (e) {

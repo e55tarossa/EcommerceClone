@@ -21,6 +21,7 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
   const [userAvatar, setUserAvatar] = useState('')
   const [userName, setUserName] = useState("")
   const [search, setSearch] = useState("")
+  const [isOpenPopUp, setIsOpenPopUp] = useState(false)
   const handleLogout = async () => {
     setLoading(true)
     await UserService.logoutUser()
@@ -38,13 +39,27 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
 
   const Content = (
     <div>
-      <WrapperContentPopup onClick={() => navigate("/profile-user")}>User Information</WrapperContentPopup>
+      <WrapperContentPopup onClick={() => handleClickNavigate("profile")}>User Information</WrapperContentPopup>
       {user?.isAdmin && (
-        <WrapperContentPopup onClick={() => navigate("/system/admin")}>System Management</WrapperContentPopup>
+        <WrapperContentPopup onClick={() => handleClickNavigate("admin")}>System Management</WrapperContentPopup>
       )}
+      <WrapperContentPopup onClick={() => handleClickNavigate("my-order")}>My order</WrapperContentPopup>
       <WrapperContentPopup onClick={handleLogout}>Logout</WrapperContentPopup>
     </div>
   )
+
+  const handleClickNavigate = (type) => {
+    if (type === 'profile') {
+      navigate("/profile-user")
+    } else if (type === 'admin') {
+      navigate("/system/admin")
+    } else if (type === 'my-order') {
+      navigate("/my-order")
+    } else {
+      handleLogout()
+    }
+    setIsOpenPopUp(false)
+  }
 
   const onSearch = (e) => {
     setSearch(e.target.value)
@@ -53,10 +68,12 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
   }
   return (
     <div>
-      <WrapperHeader gutter={16} style={{justifyContent: isHiddenSearch ? 'space-between' : 'unset'}}>
+      <WrapperHeader gutter={16} style={{ justifyContent: isHiddenSearch ? 'space-between' : 'unset' }}>
         <Col span={5}>
           <WrapperTextHeader>
-            e55Store
+            <Link to="/" style={{color :"white"}}>
+              e55Store
+            </Link>
           </WrapperTextHeader>
         </Col>
         {!isHiddenSearch && (<Col span={13}>
@@ -82,8 +99,8 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
               )}
               {user?.access_token ? (
                 <>
-                  <Popover content={Content} title="User settings" trigger="click">
-                    <div style={{ cursor: "pointer" }}>{userName?.length ? userName : user?.email}</div>
+                  <Popover content={Content} title="User settings" trigger="click" open={isOpenPopUp}>
+                    <div onClick={() => setIsOpenPopUp((prev) => !prev)} style={{ cursor: "pointer" }}>{userName?.length ? userName : user?.email}</div>
                   </Popover>
                 </>
               ) :
@@ -99,7 +116,7 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
 
             </WrapperAccountHeader>
           </Loading>
-          {!isHiddenCart && (<WrapperCartHeader onClick={() => navigate("/order")} style={{cursor: "pointer"}}>
+          {!isHiddenCart && (<WrapperCartHeader onClick={() => navigate("/order")} style={{ cursor: "pointer" }}>
             <Badge count={order?.orderItems?.length} size="small">
               <ShoppingCartOutlined style={{ fontSize: '30px', color: "#fff" }} />
             </Badge>

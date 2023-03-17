@@ -1,8 +1,9 @@
 import React from 'react'
-import { NameProduct, WrapperCard, WrapperDiscountText, WrapperPriceText, WrapperReportText } from './style'
+import { NameProduct, WrapperCard, WrapperDiscountText, WrapperOutOfStock, WrapperPriceText, WrapperReportText } from './style'
 import { StarFilled } from "@ant-design/icons"
 import { useNavigate } from "react-router-dom"
 import logo from '../../assets/images/logo.png'
+import { convertPrice } from '../../ultils'
 
 
 const CardComponent = ({ product, id }) => {
@@ -20,8 +21,13 @@ const CardComponent = ({ product, id }) => {
             }}
             bodyStyle={{ padding: "10px" }}
             cover={<img alt="example" src={product?.image} />}
-            onClick={() => handleDetailsProduct(id)}
+            onClick={() => product.countInStock !== 0 && handleDetailsProduct(id)}
+            disabled={product.countInStock === 0}
         >
+            {product.countInStock === 0 && (
+                <div style={{  display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <WrapperOutOfStock>Out of Stock</WrapperOutOfStock></div>
+            )}
             {/* <img src={logo} alt="" style={{width:"68px",height:"14px",position:"absolute", top:"-1", left: "-1", borderTopLeftRadius:"3px"}}/> */}
             <NameProduct>{product?.name}</NameProduct>
             <WrapperReportText>
@@ -30,7 +36,7 @@ const CardComponent = ({ product, id }) => {
             </WrapperReportText>
 
             <WrapperPriceText>
-                <span style={{ marginRight: "8px" }}>{product?.price?.toLocaleString()}</span>
+                <span style={{ marginRight: "8px" }}>{convertPrice(product?.price)}</span>
                 <WrapperDiscountText>-{product?.discount || "20"}%</WrapperDiscountText>
             </WrapperPriceText>
         </WrapperCard>

@@ -9,6 +9,7 @@ import Loading from '../LoadingComponent/Loading'
 import {useDispatch, useSelector} from 'react-redux'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { addOrderProduct } from '../../redux/slices/orderSlice'
+import { convertPrice } from '../../ultils'
 
 const ProductDetailsComponent = ({ idProduct }) => {
     const [numProduct, setNumProduct] = useState(1)
@@ -97,7 +98,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
                         <WrapperStyleTextSell> | Da ban 1000+</WrapperStyleTextSell>
                     </div>
                     <WrapperPriceProduct>
-                        <WrapperPriceTextProduct>{productDetails?.price}</WrapperPriceTextProduct>
+                        <WrapperPriceTextProduct>{convertPrice(productDetails?.price)}</WrapperPriceTextProduct>
                     </WrapperPriceProduct>
                     <WrapperAddressProduct>
                         <span>Giao đến </span>

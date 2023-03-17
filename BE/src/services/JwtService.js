@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 
+//Khoi tao Access Token 
 const generalAccessToken = (payload) => {
   // console.log(payload); ID, isAdmin
   const access_token = jwt.sign(
@@ -12,6 +13,7 @@ const generalAccessToken = (payload) => {
   return access_token;
 };
 
+//Khoi tao refreshtoken
 const generalRefreshToken = (payload) => {
   const refresh_token = jwt.sign(
     {
@@ -23,6 +25,7 @@ const generalRefreshToken = (payload) => {
   return refresh_token;
 };
 
+//
 const refreshTokenJWTService = (token) => {
   return new Promise((resolve, reject) => {
     try {

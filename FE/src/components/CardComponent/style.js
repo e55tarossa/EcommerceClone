@@ -8,6 +8,17 @@ export const WrapperCard = styled(Card)`
         width: 200px
     }
     position:relative;
+    background-color : ${props => props.disabled ? "#ccc" : "#fff"};
+    cursor : ${props => props.disabled ? "not-allowed" : "pointer"};
+`
+
+export const WrapperOutOfStock = styled.div`
+    background-color: rgba(0, 0, 0, .65);
+    color: #fff;
+    text-align: center;
+    font-size: .75rem;
+    padding: 10px;
+    border-radius: 5rem;
 `
 
 export const NameProduct = styled.div`
