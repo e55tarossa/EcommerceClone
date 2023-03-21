@@ -43,7 +43,7 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
       {user?.isAdmin && (
         <WrapperContentPopup onClick={() => handleClickNavigate("admin")}>System Management</WrapperContentPopup>
       )}
-      <WrapperContentPopup onClick={() => handleClickNavigate("my-order")}>My order</WrapperContentPopup>
+      <WrapperContentPopup onClick={() => handleClickNavigate(`my-order`)}>My order</WrapperContentPopup>
       <WrapperContentPopup onClick={handleLogout}>Logout</WrapperContentPopup>
     </div>
   )
@@ -54,7 +54,10 @@ const HeaderComponent = ({ isHiddenSearch = false, isHiddenCart = false }) => {
     } else if (type === 'admin') {
       navigate("/system/admin")
     } else if (type === 'my-order') {
-      navigate("/my-order")
+      navigate("/my-order",{state : {
+        id : user?.id,
+        access_token :user?.access_token
+      }})
     } else {
       handleLogout()
     }

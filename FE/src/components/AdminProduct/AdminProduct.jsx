@@ -23,18 +23,7 @@ const AdminProduct = () => {
     const [isOpenDrawer, setIsOpenDrawer] = useState(false);
     const [isLoadingUpdate, setIsLoadingUpdate] = useState(false);
     const user = useSelector(state => state?.user) //lay token
-    const [stateProduct, setStateProduct] = useState({
-        name: "",
-        price: "",
-        description: "",
-        rating: "",
-        image: "",
-        type: "",
-        countInStock: "",
-        discount:"",
-        newType: ""
-    })
-    const [stateProductDetails, setStateProductDetails] = useState({
+    const initital = () => ({
         name: "",
         price: "",
         description: "",
@@ -44,6 +33,8 @@ const AdminProduct = () => {
         countInStock: "",
         discount: "",
     })
+    const [stateProduct, setStateProduct] = useState(initital())
+    const [stateProductDetails, setStateProductDetails] = useState(initital())
     const [typeSelect, setTypeSelect] = useState('');
 
 
@@ -113,8 +104,12 @@ const AdminProduct = () => {
 
     //useEffect product -------------
     useEffect(() => {
-        form.setFieldsValue(stateProductDetails)
-    }, [form, stateProductDetails])
+        if(!isModalOpen){
+            form.setFieldsValue(stateProductDetails)
+        } else {
+            form.setFieldsValue(initital())
+        }
+    }, [form, stateProductDetails, isModalOpen])
 
     useEffect(() => {
         if (rowSelected && isOpenDrawer) {
@@ -528,7 +523,6 @@ const AdminProduct = () => {
                                 <InputComponent value={stateProduct.newType} onChange={handleChange} name="newType" />
                             </Form.Item>
                         )}
-
                         {/* <Form.Item label="Type"
                             name="type"
                             rules={[{ required: true, message: 'Please input your type!', },]}>

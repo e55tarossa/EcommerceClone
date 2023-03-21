@@ -21,10 +21,10 @@ const CardComponent = ({ product, id }) => {
             }}
             bodyStyle={{ padding: "10px" }}
             cover={<img alt="example" src={product?.image} />}
-            onClick={() => product.countInStock !== 0 && handleDetailsProduct(id)}
-            disabled={product.countInStock === 0}
+            onClick={() => product.countInStock >= 0 && handleDetailsProduct(id)}
+            disabled={product.countInStock <= 0}
         >
-            {product.countInStock === 0 && (
+            {product.countInStock <= 0 && (
                 <div style={{  display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <WrapperOutOfStock>Out of Stock</WrapperOutOfStock></div>
             )}
