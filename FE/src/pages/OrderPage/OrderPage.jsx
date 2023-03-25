@@ -44,9 +44,11 @@ const OrderPage = () => {
   };
   // console.log(listChecked);
 
-  const handleChangeCount = (type, idProduct) => {
+  const handleChangeCount = (type, idProduct, limited) => {
     if (type === 'increase') {
-      dispatch(increaseAmount({ idProduct }))
+      if(!limited){
+        dispatch(increaseAmount({ idProduct }))
+      }
     } else {
       dispatch(decreaseAmount({ idProduct }))
     }
@@ -85,7 +87,7 @@ const OrderPage = () => {
     }
   }, [isOpenModelUpdateInfo])
 
-  console.log(stateUserDetails);
+  // console.log(stateUserDetails);
 
   const handleChangeAddress = () => {
     setIsOpenModelUpdateInfo(true)
@@ -106,7 +108,7 @@ const OrderPage = () => {
   }, [order])
   const priceDiscountMemo = useMemo(() => {
     const result = order?.orderItemsSelected?.reduce((total, current) => {
-      return total + ((current.discount * current.amount))
+      return total + ((current.discount * current.amount)) / current.amount
     }, 0)
     if (Number(result)) {
       return result
@@ -116,14 +118,14 @@ const OrderPage = () => {
   const priceDeliveryMemo = useMemo(() => {
     if(priceMemo >= 200000 && priceMemo < 500000){
       return 10000
-    }else if(priceMemo >= 500000 || order?.orderItemsSlected?.length === 0) {
+    }else if(priceMemo >= 500000 || order?.orderItemsSelected?.length === 0) {
       return 0
     } else {
       return 20000
     }
   }, [priceMemo])
   const totalPrice = useMemo(() => {
-    return priceMemo - priceDiscountMemo + priceDeliveryMemo
+    return priceMemo - Number(priceMemo * priceDiscountMemo  / 100) + priceDeliveryMemo
   }, [priceMemo, priceDiscountMemo, priceDeliveryMemo])
 
   const handleCheckout = () => {
@@ -239,8 +241,8 @@ const OrderPage = () => {
                         <button style={{ border: 'none', background: 'transparent', cursor: 'pointer' }} onClick={() => handleChangeCount('decrease', order?.product)}>
                           <MinusOutlined style={{ color: '#000', fontSize: '10px' }} />
                         </button>
-                        <WrapperInputNumber min={1} defaultValue={order?.amount} value={order?.amount} size="small" />
-                        <button style={{ border: 'none', background: 'transparent', cursor: 'pointer' }} onClick={() => handleChangeCount('increase', order?.product)}>
+                        <WrapperInputNumber min={1} defaultValue={order?.amount} max={order?.countInStock} value={order?.amount} size="small" />
+                        <button style={{ border: 'none', background: 'transparent', cursor: 'pointer' }} onClick={() => handleChangeCount('increase', order?.product, order?.amount === order?.countInStock)}>
                           <PlusOutlined style={{ color: '#000', fontSize: '10px' }} />
                         </button>
                       </WrapperCountOrder>
@@ -274,7 +276,7 @@ const OrderPage = () => {
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                   <span>Giảm giá</span>
-                  <span style={{ color: '#000', fontSize: '14px', fontWeight: 'bold' }}>{convertPrice(priceDiscountMemo)}</span>
+                  <span style={{ color: '#000', fontSize: '14px', fontWeight: 'bold' }}>{convertPrice(priceMemo * priceDiscountMemo / 100)}</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                   <span>Phí giao hàng</span>

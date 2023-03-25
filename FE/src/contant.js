@@ -5,5 +5,6 @@ export const orderContant = {
     },
     payment : {
         later_money: 'Cash payment on delivery',
+        paypal: 'Cash payment on paypal',
     }
 }

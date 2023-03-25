@@ -1,5 +1,6 @@
 const Order = require("../models/OrderProduct");
 const Product = require("../models/Product");
+const EmailService = require("../services/EmailService");
 const createOrder = (newOrder) => {
   return new Promise(async (resolve, reject) => {
     // console.log(newOrder); orderItems: [
@@ -14,6 +15,9 @@ const createOrder = (newOrder) => {
       city,
       phone,
       user,
+      email,
+      isPaid,
+      paidAt,
     } = newOrder;
     try {
       // console.log("orderItems", { orderItems });
@@ -39,8 +43,11 @@ const createOrder = (newOrder) => {
             shippingPrice,
             totalPrice,
             user: user,
+            isPaid,
+            paidAt,
           });
           if (createdOrder) {
+            await EmailService.sendEmailCreateOrder(email, orderItems);
             return {
               status: "OK",
               message: "Success",
@@ -69,7 +76,7 @@ const createOrder = (newOrder) => {
         status: "OK",
         message: "Success",
       });
-      console.log(results);
+      // console.log(results);
     } catch (e) {
       console.log(e);
       reject(e);
@@ -150,7 +157,7 @@ const cancelOrder = (id) => {
           }
           resolve({
             status: "OK",
-            message: "Delete order success",
+            message: "Remove order success",
             data: checkOrder,
           });
         }
@@ -159,11 +166,11 @@ const cancelOrder = (id) => {
       await Promise.all(promises);
       resolve({
         status: "OK",
-        message: "Delete order success",
+        message: "Remove order success",
         data: checkOrder,
       });
     } catch (e) {
-      reject(e);
+      reject(e.message);
     }
   });
 };

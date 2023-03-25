@@ -2,7 +2,6 @@ import React from 'react'
 import { WrapperAllPrice, WrapperContentInfo, WrapperHeaderUser, WrapperInfoUser, WrapperItem, WrapperItemLabel, WrapperLabel, WrapperNameProduct, WrapperProduct, WrapperStyleContent } from './style'
 import logo from '../../assets/images/logo.png'
 import { useLocation, useParams } from 'react-router-dom'
-import { useEffect } from 'react'
 import * as OrderService from '../../services/OrderService'
 import { useQuery } from '@tanstack/react-query'
 import { orderContant } from '../../contant'
@@ -60,7 +59,7 @@ const DetailsOrderPage = () => {
           <WrapperInfoUser>
             <WrapperLabel>Hình thức thanh toán</WrapperLabel>
             <WrapperContentInfo>
-              <div className='payment-info'>{orderContant[data?.paymentMethod]}</div>
+              <div className='payment-info'>{orderContant.payment[data?.paymentMethod]}</div>
               <div className='status-payment'>{data?.isPaid ? 'Đã thanh toán' : 'Chưa thanh toán'}</div>
             </WrapperContentInfo>
           </WrapperInfoUser>
@@ -97,9 +96,7 @@ const DetailsOrderPage = () => {
                 </WrapperNameProduct>
                 <WrapperItem>{convertPrice(order?.price)}</WrapperItem>
                 <WrapperItem>{order?.amount}</WrapperItem>
-                <WrapperItem>{order?.discount ? convertPrice(order?.discount) : '0 VND'}</WrapperItem>
-                
-                
+                <WrapperItem>{order?.discount ? convertPrice(priceMemo * order?.discount /100) : '0 VND'}</WrapperItem>
               </WrapperProduct>
             )
           })}

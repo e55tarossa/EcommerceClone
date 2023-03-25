@@ -2,3 +2,9 @@ express dotenv bcrypt jsonwebtoken body-parser cros
 moogooes
 
 JWT CRUD Product Middleware MVC Pagination
+
+Paypal Checkout SandBox
+
+
+sb-xz6gv25337433@personal.example.com
+o#DHllU5

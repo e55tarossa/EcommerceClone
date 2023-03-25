@@ -257,6 +257,11 @@ const AdminProduct = () => {
             },
         },
         {
+            title: 'Discount',
+            dataIndex: 'discount',
+            sorter: (a, b) => a.discount - b.discount,
+        },
+        {
             title: 'Rating',
             dataIndex: 'rating',
             sorter: (a, b) => a.rating - b.rating,
