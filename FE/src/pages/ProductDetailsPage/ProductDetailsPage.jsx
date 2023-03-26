@@ -9,7 +9,7 @@ const ProductDetailsPage = () => {
   const navigate = useNavigate()
   // console.log(id);
   return (
-    <div style={{ height: "100vh", width: "100%", backgroundColor: "#efefef" }}>
+    <div style={{ width: "100%", backgroundColor: "#efefef" }}>
       <div style={{ width: "1270px", height: "100vh", margin: "0 auto" }}>
         <h5><span style={{ cursor: "pointer", fontWeight: "bold" }} onClick={() => navigate('/')}>Home page</span> | Product details</h5>
         <ProductDetailsComponent idProduct={id} />

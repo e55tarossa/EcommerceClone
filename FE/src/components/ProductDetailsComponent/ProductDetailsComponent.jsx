@@ -9,8 +9,10 @@ import Loading from '../LoadingComponent/Loading'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { addOrderProduct, resetOrder } from '../../redux/slices/orderSlice'
-import { convertPrice } from '../../ultils'
+import { convertPrice, initFacebookSDK } from '../../ultils'
 import * as message from "../../components/Message/Message"
+import LikeButtonComponent from '../LikeButtonComponent/LikeButtonComponent'
+import CommentComponent from '../CommentComponent/CommentComponent'
 
 const ProductDetailsComponent = ({ idProduct }) => {
     const [numProduct, setNumProduct] = useState(1)
@@ -41,6 +43,11 @@ const ProductDetailsComponent = ({ idProduct }) => {
     },[numProduct])
 
 
+    //sdk
+    useEffect(() => {
+        initFacebookSDK()
+    },[])
+
     useEffect(() => {
         if(order.isSuccessOrder){
             message.success("Add order to cart success")
@@ -61,6 +68,8 @@ const ProductDetailsComponent = ({ idProduct }) => {
             }
         }
     }
+
+
 
     const handleAddOrderProduct = () => {
         if (!user?.id) {
@@ -133,8 +142,9 @@ const ProductDetailsComponent = ({ idProduct }) => {
                     <WrapperAddressProduct>
                         <span>Giao đến </span>
                         <span className='address'>{user?.address}</span> -
-                        <span className='change-address'>Đổi địa chỉ</span>
+                        <span className='change-address'>Change address</span>
                     </WrapperAddressProduct>
+                    <LikeButtonComponent dataHref={"https://developers.facebook.com/docs/plugins/"}/>
                     <div style={{ margin: '10px 0 20px', padding: '10px 0', borderTop: '1px solid #e5e5e5', borderBottom: '1px solid #e5e5e5' }}>
                         <div style={{ marginBottom: '10px' }}>Số lượng</div>
                         <WrapperQualityProduct>
@@ -178,6 +188,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
                     </div>
                          {errorLimitOrder && <div style={{color: 'red'}}>Out of stock</div>}
                 </Col>
+            <CommentComponent dataHref={"https://developers.facebook.com/docs/plugins/comments#configurator"} width="1270"/>
             </Row>
         </Loading>
     )
