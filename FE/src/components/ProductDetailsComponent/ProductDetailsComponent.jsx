@@ -1,7 +1,7 @@
 import { Col, Image, Rate, Row } from 'antd'
 import { WrapperStyleImageSmall, WrapperStyleColImage, WrapperStyleNameProduct, WrapperStyleTextSell, WrapperPriceProduct, WrapperPriceTextProduct, WrapperAddressProduct, WrapperQualityProduct, WrapperInputNumber, WrapperBtnQualityProduct } from './style'
 import { PlusOutlined, MinusOutlined } from '@ant-design/icons'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import * as ProductService from '../../services/ProductService'
 import ButtonComponent from '../ButtonComponent/ButtonComponent'
 import { useQuery } from '@tanstack/react-query'
@@ -41,7 +41,6 @@ const ProductDetailsComponent = ({ idProduct }) => {
             setErrorLimitOrder(true)
         }
     },[numProduct])
-
 
     //sdk
     useEffect(() => {
@@ -144,7 +143,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
                         <span className='address'>{user?.address}</span> -
                         <span className='change-address'>Change address</span>
                     </WrapperAddressProduct>
-                    <LikeButtonComponent dataHref={"https://developers.facebook.com/docs/plugins/"}/>
+                    <LikeButtonComponent dataHref={ process.env.REACT_APP_IS_LOCAL ? "https://developers.facebook.com/docs/plugins/" : window.location.href}/>
                     <div style={{ margin: '10px 0 20px', padding: '10px 0', borderTop: '1px solid #e5e5e5', borderBottom: '1px solid #e5e5e5' }}>
                         <div style={{ marginBottom: '10px' }}>Số lượng</div>
                         <WrapperQualityProduct>
@@ -188,7 +187,7 @@ const ProductDetailsComponent = ({ idProduct }) => {
                     </div>
                          {errorLimitOrder && <div style={{color: 'red'}}>Out of stock</div>}
                 </Col>
-            <CommentComponent dataHref={"https://developers.facebook.com/docs/plugins/comments#configurator"} width="1270"/>
+            <CommentComponent dataHref={process.env.REACT_APP_IS_LOCAL ? "https://developers.facebook.com/docs/plugins/comments#configurator" : window.location.href} width="1270"/>
             </Row>
         </Loading>
     )

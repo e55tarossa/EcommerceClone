@@ -30,29 +30,10 @@ const createOrder = (newOrder) => {
         ); // $gte check (>=)  tìm thằng nào đủ để giảm số lượng dc
         console.log(productData);
         if (productData) {
-          const createdOrder = await Order.create({
-            orderItems,
-            shippingAddress: {
-              fullName: fullName,
-              address: address,
-              city: city,
-              phone: phone,
-            },
-            paymentMethod,
-            itemsPrice,
-            shippingPrice,
-            totalPrice,
-            user: user,
-            isPaid,
-            paidAt,
-          });
-          if (createdOrder) {
-            await EmailService.sendEmailCreateOrder(email, orderItems);
-            return {
-              status: "OK",
-              message: "Success",
-            };
-          }
+          return {
+            status: "OK",
+            message: "Success",
+          };
         } else {
           return {
             status: "OK",
@@ -62,20 +43,45 @@ const createOrder = (newOrder) => {
         }
       });
       const results = await Promise.all(promises);
-      const newData = results && results.filter((item) => item.id);
-      if (newData.length) {
+      const newData = results && results.filter((item) => item.id || null);
+      // console.log(newData); la 1 object
+      if (newData.length) { //tao order
         // neu thg newData có dữ liệu là sl không đủ
+        const arrId = [] 
+         newData.forEach((item) => {
+          arrId.push(item)
+        })
         resolve({
           status: "ERR",
-          message: `Product with the ID ${newData.join(
+          message: `Product with the ID ${arrId.join(
             ","
           )} not enough in stock`,
         });
+      } else {
+        const createdOrder = await Order.create({
+          orderItems,
+          shippingAddress: {
+            fullName: fullName,
+            address: address,
+            city: city,
+            phone: phone,
+          },
+          paymentMethod,
+          itemsPrice,
+          shippingPrice,
+          totalPrice,
+          user: user,
+          isPaid,
+          paidAt,
+        });
+        if (createdOrder) {
+          await EmailService.sendEmailCreateOrder(email, orderItems);
+          resolve({
+            status: "OK",
+            message: "Success",
+          });
+        }
       }
-      resolve({
-        status: "OK",
-        message: "Success",
-      });
       // console.log(results);
     } catch (e) {
       console.log(e);
