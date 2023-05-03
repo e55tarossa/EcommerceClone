@@ -181,9 +181,26 @@ const cancelOrder = (id) => {
   });
 };
 
+const getAllOrder = () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const allOrder = await Order.find();
+      resolve({
+        status: "OK",
+        message: "Get all Order success",
+        data: allOrder,
+      });
+    } catch (e) {
+      reject(e);
+    }
+  });
+};
+
+
 module.exports = {
   createOrder,
   getAllOrderDetails,
   getDetailsOrder,
   cancelOrder,
+  getAllOrder
 };

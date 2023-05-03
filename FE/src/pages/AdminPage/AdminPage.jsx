@@ -1,14 +1,16 @@
 import { Menu } from 'antd'
-import { UserOutlined, AppstoreOutlined } from '@ant-design/icons'
+import { UserOutlined, AppstoreOutlined, ShoppingCartOutlined } from '@ant-design/icons'
 import React, { useState } from 'react';
 import HeaderComponent from '../../components/HeaderComponent/HeaderComponent';
 import { getItem } from '../../ultils';
 import AdminUser from '../../components/AdminUser/AdminUser';
 import AdminProduct from '../../components/AdminProduct/AdminProduct';
+import AdminOrder from '../../components/AdminOrder/AdminOrder';
 
 const items = [
   getItem('User management', 'user', <UserOutlined />),
-  getItem('Product management', 'product', <AppstoreOutlined />)
+  getItem('Product management', 'product', <AppstoreOutlined />),
+  getItem('Order management', 'order', <ShoppingCartOutlined />)
 ];
 
 const AdminPage = () => {
@@ -23,6 +25,10 @@ const AdminPage = () => {
         return (
           <AdminProduct />
         )
+      case "order":
+        return (
+          <AdminOrder />
+        )
       default:
         return <></>
     }
@@ -36,7 +42,7 @@ const AdminPage = () => {
   return (
     <>
       <HeaderComponent isHiddenSearch isHiddenCart />
-      <div style={{ display: 'flex', }}>
+      <div style={{ display: 'flex',overflowX:'hidden' }}>
         <Menu
           mode="inline"
           style={{
@@ -47,7 +53,7 @@ const AdminPage = () => {
           items={items}
           onClick={handleOnClick}
         />
-        <div style={{ flex: 1, padding:"15px" }}>
+        <div style={{ flex: 1, padding:"15px 0 15px 15px" }}>
           {renderPage(keySelected)}
         </div>
       </div>
